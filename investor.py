@@ -1,9 +1,11 @@
 import json
 import urllib.request as requests
 import ssl
+from time import time
 from datetime import date, timedelta
 from Portfolio import Portfolio
 from Investment import Investment
+from HillClimber import HillClimber
 
 ALPHAVANTAGE_API_KEY = "LAWBJ72TZRI6BMNI"
 API_FUNCTION = "TIME_SERIES_DAILY"
@@ -58,18 +60,30 @@ class Main:
                 thirty_days_ago = thirty_days_ago - timedelta(days=1)
                 thirty_string = thirty_days_ago.strftime("%Y-%m-%d")
             
-        thirty_day_change = round( (float(last_close) - float(thirty_close)) / float(thirty_close), 4)
+        thirty_day_change =  (float(last_close) - float(thirty_close)) / float(thirty_close)
         portfolio.append(Investment(potential_symbol, invest_amount / 10, thirty_day_change))
         
-        print("\tSuccessfully added {} with an investment of ${}".format(
-                              potential_symbol,        invest_amount / 10))
-    print("\nHere is the portfolio I will optimize an investment mix in:")
-    print("\tSYMBOL         30-DAY CHANGE")
-    print("\t------         -------------")
-    for investment in portfolio:
-        print("\t{:>6}              {:>7}%".format(investment.symbol, round(investment.percent_change * 100, 2)))
-
+        print("Successfully loaded data for {} and added to portfolio.\n".format(potential_symbol))
     start_portfolio = Portfolio(portfolio)
+    print("\nHere is the portfolio I will optimize an investment mix in:")
+    print(start_portfolio)
+
+    start = time()
+    print("Calculating optimal investment mix with hill-climbing (random restarts)...")
+    climber = HillClimber(start_portfolio, 10, invest_amount)
+    hill_best = climber.hill_climb()
+    end = time()
+    print("Done in {} seconds.\n".format(end-start))
+    print(hill_best)
+
+    start = time()
+    print("Calculating optimal investment mix with simulated annealing...")
+    # simulated annealing
+    end = time()
+    print("Done in {} seconds.\n".format(end-start))
+
+    print("\n\n\n")
+    print("Strategy         $ Profit")
     print("With your current investment strategy, you made: ${}".format(round(start_portfolio.worth - invest_amount, 2)))
         
 
