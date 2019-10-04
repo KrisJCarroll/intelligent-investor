@@ -2,29 +2,30 @@ import json
 import urllib.request as requests
 import ssl
 from datetime import date, timedelta
+from Portfolio import Portfolio
+from Investment import Investment
 
 ALPHAVANTAGE_API_KEY = "LAWBJ72TZRI6BMNI"
 API_FUNCTION = "TIME_SERIES_DAILY"
 FUNC_STRING = "Time Series (Daily)"
 
 class Main:
-    portfolio_symbols = []
-    portfolio_data = {}
-
-    yesterday = date.today() - timedelta(days=1)
-    date_string = yesterday.strftime("%Y-%m-%d")
-
-    thirty_days_ago = yesterday - timedelta(days=30)
-    thirty_string = thirty_days_ago.strftime("%Y-%m-%d")
+    portfolio = []
 
     print("======================================================================================================")
     print("Welcome to the Intelligent Investor(tm). You provide 10 stocks for a portfolio you'd like to optimize.")
     print("I'll tell you what the best mix of investment in those 10 stocks would be based on 30-day history.")
     print("Results will be calculated based on either hill-climbing or simulated annealing algorithms.")
     print("======================================================================================================")
-    while len(portfolio_symbols) < 10:
+    invest_amount = round(float(input("Enter dollar amount to invest: $")), 2)
+    while len(portfolio) < 10:
+        yesterday = date.today() - timedelta(days=1)
+        date_string = yesterday.strftime("%Y-%m-%d")
+
+        thirty_days_ago = yesterday - timedelta(days=30)
+        thirty_string = thirty_days_ago.strftime("%Y-%m-%d")
         potential_symbol = input("Input a valid NASDAQ stock symbol: ")
-        if potential_symbol in portfolio_data:
+        if potential_symbol in portfolio:
             print("You already selected that symbol, let's diversify the portfolio! (Please enter unique symbols only)")
             continue
 
@@ -57,16 +58,19 @@ class Main:
                 thirty_days_ago = thirty_days_ago - timedelta(days=1)
                 thirty_string = thirty_days_ago.strftime("%Y-%m-%d")
             
-        thirty_day_change = round((float(last_close) - float(thirty_close)), 2) 
-        portfolio_symbols.append(potential_symbol)
-        portfolio_data[potential_symbol] = thirty_day_change
-        print("\tSuccessfully added {} with a 30-day change of ${} to your portfolio.".format(
-                              potential_symbol,        thirty_day_change))
+        thirty_day_change = round( (float(last_close) - float(thirty_close)) / float(thirty_close), 4)
+        portfolio.append(Investment(potential_symbol, invest_amount / 10, thirty_day_change))
+        
+        print("\tSuccessfully added {} with an investment of ${}".format(
+                              potential_symbol,        invest_amount / 10))
     print("\nHere is the portfolio I will optimize an investment mix in:")
     print("\tSYMBOL         30-DAY CHANGE")
     print("\t------         -------------")
-    for k,v in portfolio_data.items():
-        print("\t{}              ${}".format(k,v))
+    for investment in portfolio:
+        print("\t{:>6}              {:>7}%".format(investment.symbol, round(investment.percent_change * 100, 2)))
+
+    start_portfolio = Portfolio(portfolio)
+    print("With your current investment strategy, you made: ${}".format(round(start_portfolio.worth - invest_amount, 2)))
         
 
 
