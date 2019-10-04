@@ -23,7 +23,7 @@ class Main:
     print("Results will be calculated based on either hill-climbing or simulated annealing algorithms.")
     print("======================================================================================================")
     while len(portfolio_symbols) < 10:
-        potential_symbol = input("Input a valid NASDAQ stock symbol:")
+        potential_symbol = input("Input a valid NASDAQ stock symbol: ")
         if potential_symbol in portfolio_data:
             print("You already selected that symbol, let's diversify the portfolio! (Please enter unique symbols only)")
             continue
@@ -60,13 +60,13 @@ class Main:
         thirty_day_change = round((float(last_close) - float(thirty_close)), 2) 
         portfolio_symbols.append(potential_symbol)
         portfolio_data[potential_symbol] = thirty_day_change
-        print("\tSuccessfully added {} with a 30-day change of {} to your portfolio.".format(
+        print("\tSuccessfully added {} with a 30-day change of ${} to your portfolio.".format(
                               potential_symbol,        thirty_day_change))
     print("\nHere is the portfolio I will optimize an investment mix in:")
     print("\tSYMBOL         30-DAY CHANGE")
     print("\t------         -------------")
     for k,v in portfolio_data.items():
-        print("\t{}              {}".format(k,v))
+        print("\t{}              ${}".format(k,v))
         
 
 
