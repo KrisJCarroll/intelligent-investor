@@ -1,3 +1,13 @@
+"""
+HillClimber.py
+Authors: Kristopher Carroll & Andrea Jacuk
+CSCE A405 - Assignment 2
+
+Class to handle hill climbing search with random restart. This class maintains the starting
+Portfolio for the problem space, the number of random restarts that should be performed during
+search, and the total amount to be invested to be used to calculate random restarts.
+"""
+
 from Investment import Investment
 from Portfolio import Portfolio
 import random as rand
@@ -7,7 +17,8 @@ class HillClimber:
         self.start_portfolio = start_portfolio
         self.num_restarts = num_restarts
         self.total_investment = total_investment
-    
+    # Performs a random restart by randomly investing some portion of the total investment into each
+    # Investment and returning a new Portfolio with these Investments
     def random_restart(self):
         remaining = self.total_investment
         temp_portfolio = []
