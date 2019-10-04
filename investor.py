@@ -6,6 +6,7 @@ from datetime import date, timedelta
 from Portfolio import Portfolio
 from Investment import Investment
 from HillClimber import HillClimber
+from Annealer import Annealer
 
 ALPHAVANTAGE_API_KEY = "LAWBJ72TZRI6BMNI"
 API_FUNCTION = "TIME_SERIES_DAILY"
@@ -70,7 +71,7 @@ class Main:
 
     start = time()
     print("Calculating optimal investment mix with hill-climbing (random restarts)...")
-    climber = HillClimber(start_portfolio, 30, invest_amount)
+    climber = HillClimber(start_portfolio, 10, invest_amount)
     hill_best = climber.hill_climb()
     end = time()
     print("Done in {} seconds.\n".format(end-start))
@@ -79,7 +80,10 @@ class Main:
 
     start = time()
     print("Calculating optimal investment mix with simulated annealing...")
-    # simulated annealing
+    annealer = Annealer(start_portfolio, 10000)
+    anneal_best = annealer.anneal()
+    print(anneal_best)
+    print(anneal_best.worth)
     end = time()
     print("Done in {} seconds.\n".format(end-start))
 

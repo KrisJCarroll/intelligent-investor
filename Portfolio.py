@@ -1,4 +1,5 @@
 from Investment import Investment
+import random as rand
 
 class Portfolio:
 
@@ -55,3 +56,13 @@ class Portfolio:
                 if neighbor > best:
                     best = neighbor
         return best
+
+    def get_random_neighbor(self):
+        neighbors = []
+        for i, invest in enumerate(self.portfolio):
+            for j, other_invest in enumerate(self.portfolio):
+                if i == j:
+                    continue
+                neighbors.append(self.get_neighbor(i, j))
+        return neighbors[rand.randint(0, len(neighbors) - 1)]
+                

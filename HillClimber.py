@@ -26,8 +26,6 @@ class HillClimber:
         while self.num_restarts > 0:
             while True:
                 best = current.get_best()
-                print(best)
-                print(best.worth)
                 if best <= current:
                     break
                 current = best
