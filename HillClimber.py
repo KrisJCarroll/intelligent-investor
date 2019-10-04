@@ -9,13 +9,20 @@ class HillClimber:
         self.total_investment = total_investment
     
     def random_restart(self):
-
-        return
+        remaining = self.total_investment
+        temp_portfolio = []
+        for i, invest in enumerate(self.start_portfolio.portfolio):
+            if i == 9:
+                temp_portfolio.append(Investment(invest.symbol, remaining, invest.percent_change))
+                break
+            invest_amt = rand.randint(0, remaining)
+            temp_portfolio.append(Investment(invest.symbol, invest_amt, invest.percent_change))
+            remaining -= invest_amt
+        return Portfolio(temp_portfolio)
 
     def hill_climb(self):
         best = self.start_portfolio
         current = self.start_portfolio
-        temp_portfolio = current.portfolio.copy()
         while self.num_restarts > 0:
             while True:
                 best = current.get_best()
@@ -24,7 +31,7 @@ class HillClimber:
                 if best <= current:
                     break
                 current = best
-            self.random_restart()
+            current = self.random_restart()
             self.num_restarts -= 1
         return best
 

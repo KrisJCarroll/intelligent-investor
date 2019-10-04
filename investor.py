@@ -70,11 +70,12 @@ class Main:
 
     start = time()
     print("Calculating optimal investment mix with hill-climbing (random restarts)...")
-    climber = HillClimber(start_portfolio, 10, invest_amount)
+    climber = HillClimber(start_portfolio, 30, invest_amount)
     hill_best = climber.hill_climb()
     end = time()
     print("Done in {} seconds.\n".format(end-start))
     print(hill_best)
+    print(hill_best.worth)
 
     start = time()
     print("Calculating optimal investment mix with simulated annealing...")
